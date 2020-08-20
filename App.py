@@ -14,8 +14,6 @@ class App(tk.Frame):
 
     def setup(self):
         self.master.title("Doctor's Appointment App")
-        # self.master.maxsize(800, 600)
-        # self.master.minsize(800, 600)
 
     # Sign up screen
     def switch_to_registration(self):
@@ -38,4 +36,4 @@ class App(tk.Frame):
             self.current_view.unmount()
 
         # TODO: add this view
-        # self.current_route =
+        # self.current_view =

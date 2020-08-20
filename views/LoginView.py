@@ -49,8 +49,8 @@ class LoginView(IViewable):
 
     def unmount(self):
         # unbind then remove elements
-        self.btn_reset.unbind_all("<ButtonRelease-1>")
         self.btn_login.unbind_all("<ButtonRelease-1>")
+        self.btn_reset.unbind_all("<ButtonRelease-1>")
         self.txt_username.unbind_all("<Return>")
         self.txt_password.unbind_all("<Return>")
         self.root.unbind_all("<Return>")
@@ -70,7 +70,7 @@ class LoginView(IViewable):
         if user_id is not False:
             # correct credentials
             self.root.current_user_id = user_id
-            self.root.switch_to_registration()
+            self.root.switch_to_appointments()
         else:
             # no bueno
             messagebox.showerror(title="Login Error", message="Username/Password not found!")
