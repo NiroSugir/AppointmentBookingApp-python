@@ -1,0 +1,5 @@
+Database
+- Appointments table
+	- composite primary key: appointment timestamp & doctor id
+		- forces unique an appointment to be with a doctor and for it to be unique (eg: no double bookings with a doctor)
+	
