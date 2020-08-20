@@ -1,19 +1,21 @@
 # Niroshan Sugirtharatnam (0410842)
 import tkinter as tk
 from views.LoginView import LoginView
+from views.RegistrationView import RegistrationView
 
 
 class App(tk.Frame):
     def __init__(self, master=None):
         super().__init__(master)
         self.current_view = None
+        self.current_user_id = None
         self.setup()
         self.pack()
 
     def setup(self):
         self.master.title("Doctor's Appointment App")
-        self.master.maxsize(800, 600)
-        self.master.minsize(800, 600)
+        # self.master.maxsize(800, 600)
+        # self.master.minsize(800, 600)
 
     # Sign up screen
     def switch_to_registration(self):
@@ -21,7 +23,7 @@ class App(tk.Frame):
             self.current_view.unmount()
 
         # TODO: add this view
-        # self.current_route =
+        self.current_view = RegistrationView(self)
 
     # Login screen
     def switch_to_login(self):

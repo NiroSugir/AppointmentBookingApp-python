@@ -1,6 +1,6 @@
 # Niroshan Sugirtharatnam (0410842)
 from App import App
-
+from Database import Database
 #
 #
 # class MyLabel(tk.Label):
@@ -17,6 +17,7 @@ from App import App
 #         super().__init__(master)
 #         self.pack()
 
+Database.connect("database.sqlite3")
 
 # start with app with the login screen
 app = App()
