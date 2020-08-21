@@ -18,11 +18,14 @@ class AppointmentView(IViewable):
 
         # mount elements to screen
 
-        # personal info panel
-        self.p_info = tk.Frame(master=self.root, relief=tk.RAISED, borderwidth=1, width=600)
-        self.p_info.grid(row=1, column=1, sticky="nw")
+        self.p_username = tk.Frame(master=self.root, relief=tk.RAISED, borderwidth=1)
+        self.p_username.grid(row=1, column=1, sticky="nw")
 
-        self.lbl_username2 = tk.Label(master=self.p_info, text="Username: " + self.user_data["username"], font=Style.font_title, width=50)
+        # personal info panel
+        self.p_info = tk.Frame(master=self.root, relief=tk.RAISED, borderwidth=1)
+        self.p_info.grid(row=2, column=1, sticky="nw")
+
+        self.lbl_username2 = tk.Label(master=self.p_username, text="Username: " + self.user_data["username"], font=Style.font_title, width=50)
         self.lbl_username2.grid(row=1, column=1, sticky="w", columnspan=4)
 
         self.lbl_first_name = tk.Label(master=self.p_info, text="First Name:", font=Style.font_key, borderwidth=1)
@@ -55,7 +58,6 @@ class AppointmentView(IViewable):
         self.lbl_gender2 = tk.Label(master=self.p_info, text=self.user_data["gender"], font=Style.font_regular)
         self.lbl_gender2.grid(row=4, column=4, sticky="w", pady=5)
 
-
         # availabilities panel
         self.p_avail = tk.Frame(master=self.root, relief=tk.RAISED, borderwidth=1)
         self.p_avail.grid(row=2, column=1, padx=15, pady=35, sticky="sw")
@@ -75,7 +77,9 @@ class AppointmentView(IViewable):
         # self.txt_password.unbind_all("<Return>")
         # self.root.unbind_all("<Return>")
 
+        self.p_username.destroy()
         self.p_info.destroy()
+        self.p_avail.destroy()
 
     def __bind_event_handlers(self):
         # self.btn_login.bind("<ButtonRelease-1>", self.__handle_login)
