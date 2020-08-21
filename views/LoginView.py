@@ -79,7 +79,6 @@ class LoginView(IViewable):
 
     def __handle_login(self, _):
         user_id = Database.verify_login_credentials(self.txt_username.get(), self.txt_password.get())
-
         if user_id is not False:
             # correct credentials
             self.root.current_user_id = user_id

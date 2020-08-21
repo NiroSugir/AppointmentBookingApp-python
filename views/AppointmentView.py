@@ -170,7 +170,6 @@ class AppointmentView(IViewable):
     def __build_doctors_list(self):
         # get list of doctors that his patient is allowed to see
         self.available_doctors = Database.get_doctors_available_to_patient(self.root.current_user_id)
-        print(self.available_doctors)
 
         # populate the combobox with the list of doctors
         self.doctors = []
@@ -243,16 +242,14 @@ class AppointmentView(IViewable):
     def __show_users_appointments(self):
         appointments = Database.get_users_appointments(self.root.current_user_id, round(datetime.now().timestamp()))
         current_row = 3
-        self.afd = {}
-
-        print("drs", self.available_doctors)
+        self.available_doctors = {}
 
         # display appointments on screen
         for appointment in appointments:
             timestamp = appointment[0]
             display_time = strftime("%D %H:%M", localtime(timestamp))
 
-            color = "white" if current_row % 2 is 0 else "orange"
+            color = "white" if current_row % 2 == 0 else "orange"
 
             lbl_display_time = tk.Label(master=self.p_user_apts, text=display_time, bg=color, font=Style.font_key)
             lbl_display_time.grid(row=current_row, column=1, sticky="we")

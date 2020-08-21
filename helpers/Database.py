@@ -31,7 +31,7 @@ class Database:
             rows = cur.fetchall()
 
             # correct credentials means username and password returned a row
-            return rows[0] if len(rows) == 1 else False
+            return rows[0][0] if len(rows) == 1 else False
 
         except Error as e:
             print("Failed to load users from db!", e, sep="\n")
@@ -60,13 +60,14 @@ class Database:
 
             return False
         except Error as e:
-            print("Failed to load users from db!", e, sep="\n")
+            print("Failed to register user db!", e, sep="\n")
             exit()
 
     @staticmethod
     def get_userdata(user_id):
         try:
             cur = Database.conn.cursor()
+            print('user id', user_id)
 
             query = "SELECT username, first_name, last_name, age, city, gender, address FROM Users WHERE user_id="+str(user_id)+";"
             cur.execute(query)
@@ -87,7 +88,7 @@ class Database:
             }
 
         except Error as e:
-            print("Failed to load users from db!", e, sep="\n")
+            print("Failed to load userdata from db!", e, sep="\n")
             exit()
 
     @staticmethod
