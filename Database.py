@@ -85,7 +85,7 @@ class Database:
                 "last_name": rows[0][2],
                 "age": int(rows[0][3]),
                 "city": rows[0][4],
-                "gender": "Male" if rows[0][5] == 0 else "Female",
+                "gender": rows[0][5],
                 "address": rows[0][6],
             }
 
