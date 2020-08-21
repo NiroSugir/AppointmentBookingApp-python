@@ -64,3 +64,31 @@ class Database:
         except Error as e:
             print("Failed to load users from db!", e, sep="\n")
             exit()
+
+    @staticmethod
+    def get_userdata(user_id):
+        try:
+            cur = Database.conn.cursor()
+
+            # TODO: bind parameters if you have time
+            query = "SELECT username, first_name, last_name, age, city, gender, address FROM Users WHERE user_id="+str(user_id)+";"
+            cur.execute(query)
+            rows = cur.fetchall()
+
+            if len(rows) != 1:
+                Database.__show_db_error("Problem loading user from database. Please make sure the file is not corrupt.")
+                exit();
+
+            return {
+                "username": rows[0][0],
+                "first_name": rows[0][1],
+                "last_name": rows[0][2],
+                "age": int(rows[0][3]),
+                "city": rows[0][4],
+                "gender": "Male" if rows[0][5] == 0 else "Female",
+                "address": rows[0][6],
+            }
+
+        except Error as e:
+            print("Failed to load users from db!", e, sep="\n")
+            exit()

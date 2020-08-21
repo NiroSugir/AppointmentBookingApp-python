@@ -2,7 +2,7 @@
 import tkinter as tk
 from views.LoginView import LoginView
 from views.RegistrationView import RegistrationView
-
+from views.AppointmentView import AppointmentView
 
 class App(tk.Frame):
     def __init__(self, master=None):
@@ -34,5 +34,5 @@ class App(tk.Frame):
         if self.current_view is not None:
             self.current_view.unmount()
 
-        # TODO: create this view
-        # self.current_view =
+        # create this view
+        self.current_view = AppointmentView(self)
