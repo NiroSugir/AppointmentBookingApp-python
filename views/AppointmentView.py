@@ -237,20 +237,31 @@ class AppointmentView(IViewable):
             # rebuild schedule without the removed timeslot
             self.__build_schedule(self.search_available_bookings())
 
-            # rerender appointments list (not yet implemented)
+            # re-render appointments list (not yet implemented)
             self.__show_users_appointments()
 
     def __show_users_appointments(self):
         appointments = Database.get_users_appointments(self.root.current_user_id, round(datetime.now().timestamp()))
         current_row = 3
         self.afd = {}
-        # todo: display appointments on screen
-        print('appointments: ', appointments)
+
+        print("drs", self.available_doctors)
+
+        # display appointments on screen
         for appointment in appointments:
             timestamp = appointment[0]
             display_time = strftime("%D %H:%M", localtime(timestamp))
-            t = tk.Label(master=self.p_user_apts, text=display_time)
-            t.grid(row=current_row, column=1, sticky="we")
-            self.afd[timestamp] = t
+
+            color = "white" if current_row % 2 is 0 else "orange"
+
+            lbl_display_time = tk.Label(master=self.p_user_apts, text=display_time, bg=color, font=Style.font_key)
+            lbl_display_time.grid(row=current_row, column=1, sticky="we")
+
+            lbl_display_dr = tk.Label(master=self.p_user_apts, text="Dr. " + self.available_doctors[appointment[1]]['name'], bg=color, font=Style.font_regular)
+            lbl_display_dr.grid(row=current_row, column=2, sticky="we")
+            self.user_schedules[timestamp] = {}
+            self.user_schedules[timestamp]['time'] = lbl_display_time
+            self.user_schedules[timestamp]['dr'] = lbl_display_dr
+
             current_row += 1
 
