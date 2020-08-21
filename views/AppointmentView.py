@@ -121,6 +121,7 @@ class AppointmentView(IViewable):
         # self.txt_username.focus()
 
         self.__build_doctors_list()
+        self.__show_users_appointments()
 
 
     def unmount(self):
@@ -228,3 +229,6 @@ class AppointmentView(IViewable):
             # todo: rerender appointments list (not yet implemented)
 
             pass
+
+    def __show_users_appointments(self):
+        Database.get_users_appointments(self.root.current_user_id, round(datetime.now().timestamp()))

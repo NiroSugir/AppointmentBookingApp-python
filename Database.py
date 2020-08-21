@@ -159,3 +159,20 @@ class Database:
                 print("Failed to book appointment!", e, sep="\n")
 
             return False
+
+    @staticmethod
+    def get_users_appointments(user_id, starting_timestamp):
+        try:
+            cur = Database.conn.cursor()
+
+            query = "SELECT appointment_time, doctor_id from Appointments WHERE user_id=" + str(user_id) + " AND appointment_time >= " + str(starting_timestamp) + ";"
+            cur.execute(query)
+            rows = cur.fetchall()
+
+            print(rows)
+
+            return rows
+
+        except Error as e:
+            print("Failed to book appointment!", e, sep="\n")
+            exit()
