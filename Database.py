@@ -48,7 +48,7 @@ class Database:
             query = "INSERT INTO Users (first_name, last_name, age, gender, address, city, username, password) VALUES ('"+first_name+"','"+last_name+"','"+str(age)+"','"+gender+"','"+address+"','"+city+"','"+username+"','"+password+"');"
             cur.execute(query)
 
-            return True
+            return cur.lastrowid
 
         except IntegrityError as e:
             # Uniqueness username. username field is set to unique so we can avoid any race conditions

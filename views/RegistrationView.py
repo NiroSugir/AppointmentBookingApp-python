@@ -161,7 +161,8 @@ class RegistrationView(IViewable):
             valid = False
 
         # save to db
-        if valid and Database.register_user(
+        if valid:
+            new_user_id = Database.register_user(
                 first_name,
                 last_name,
                 age,
@@ -170,10 +171,14 @@ class RegistrationView(IViewable):
                 city,
                 username,
                 password
-        ):
-            # route to login screen when all goes well
-            # self.root.switch_to_login()
-            pass
+            )
+
+            # database handles showing the correct error message
+            if new_user_id is not False:
+                # autologin and switch to appointments screen
+                self.root.current_user_id = new_user_id
+                self.root.switch_to_appointments()
+
     def __handle_reset(self, _):
         self.txt_first_name.delete(0, tk.END)
         self.txt_last_name.delete(0, tk.END)
