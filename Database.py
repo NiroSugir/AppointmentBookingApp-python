@@ -51,7 +51,13 @@ class Database:
             return True
 
         except IntegrityError as e:
-            Database.__show_db_error(e)
+            # Uniqueness username. username field is set to unique so we can avoid any race conditions
+            if str(e).find("UNIQUE") != -1:
+                # username already taken
+                Database.__show_db_error("Username is already taken. Please choose another.")
+            else:
+                Database.__show_db_error(e)
+
             return False
         except Error as e:
             print("Failed to load users from db!", e, sep="\n")
