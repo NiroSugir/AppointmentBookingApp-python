@@ -20,7 +20,6 @@ class App(tk.Frame):
         if self.current_view is not None:
             self.current_view.unmount()
 
-        # TODO: add this view
         self.current_view = RegistrationView(self)
 
     # Login screen
@@ -35,5 +34,5 @@ class App(tk.Frame):
         if self.current_view is not None:
             self.current_view.unmount()
 
-        # TODO: add this view
+        # TODO: create this view
         # self.current_view =
