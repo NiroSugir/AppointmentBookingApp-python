@@ -18,8 +18,16 @@ class RegistrationView(IViewable):
         # mount elements to screen
 
         # keep reference to all containers, they must all be unmounted when screen gets switche
+
+        # navigation panel
+        self.nav_frame = tk.Frame(master=self.root, relief=tk.RAISED, borderwidth=0)
+        self.nav_frame.grid(row=1, column=1, sticky="ne")
+        self.btn_switch_to_login = tk.Button(master=self.nav_frame,  width=12, text="Switch to Login", font=Style.font_menu_item)
+        self.btn_switch_to_login.grid(row=12, column=2, pady=10)
+
+        # registration panel
         self.registration_frame = tk.Frame(master=self.root, relief=tk.RAISED, borderwidth=0)
-        self.registration_frame.grid(row=1, column=1, padx=15, pady=35)
+        self.registration_frame.grid(row=2, column=1, padx=15)
 
         self.lbl_registration_title = tk.Label(master=self.registration_frame, text="Sign Up", font=Style.font_title)
         self.lbl_registration_title.grid(row=1, column=1, sticky="w", columnspan=3, pady=20)
@@ -113,7 +121,9 @@ class RegistrationView(IViewable):
         self.btn_reset.unbind_all("<ButtonRelease-1>")
         self.root.unbind_all("<Return>")
         self.txt_password2.unbind_all("<Return>")
+        self.btn_switch_to_login.unbind_all("<ButtonRelease-1>")
 
+        self.nav_frame.destroy()
         self.registration_frame.destroy()
 
     @staticmethod
@@ -127,6 +137,10 @@ class RegistrationView(IViewable):
         self.btn_reset.bind("<ButtonRelease-1>", self.__handle_reset)
         self.root.bind("<Return>", self.__handle_login)
         self.txt_password2.bind("<Return>", self.__handle_login)
+        self.btn_switch_to_login.bind("<ButtonRelease-1>", self.__switch_to_login_screen)
+
+    def __switch_to_login_screen(self, _):
+        self.root.switch_to_login()
 
     def __handle_login(self, _):
         first_name = self.txt_first_name.get().strip()

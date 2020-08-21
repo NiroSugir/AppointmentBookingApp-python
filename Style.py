@@ -7,3 +7,4 @@ class Style:
 
 Style.font_title = ("Verdana", 20)
 Style.font_regular = ("Verdana", 12)
+Style.font_menu_item = ("Verdana", 8)
