@@ -5,6 +5,7 @@ from views.IViewable import IViewable
 from Style import Style
 from Database import Database
 
+
 class RegistrationView(IViewable):
     def __init__(self, root):
         self.root = root
