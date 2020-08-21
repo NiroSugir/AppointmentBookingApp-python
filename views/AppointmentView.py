@@ -3,8 +3,8 @@ import tkinter as tk
 from tkinter import messagebox
 from tkinter import ttk
 from views.IViewable import IViewable
-from Style import Style
-from Database import Database
+from helpers.Style import Style
+from helpers.Database import Database
 from datetime import datetime, date
 from time import mktime, strftime, localtime
 

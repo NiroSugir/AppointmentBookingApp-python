@@ -1,6 +1,6 @@
 # Niroshan Sugirtharatnam (0410842)
 from App import App
-from Database import Database
+from helpers.Database import Database
 
 Database.connect("db.sqlite3")
 

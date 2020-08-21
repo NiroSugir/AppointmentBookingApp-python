@@ -2,8 +2,8 @@
 import tkinter as tk
 from tkinter import messagebox
 from views.IViewable import IViewable
-from Style import Style
-from Database import Database
+from helpers.Style import Style
+from helpers.Database import Database
 
 
 class LoginView(IViewable):
