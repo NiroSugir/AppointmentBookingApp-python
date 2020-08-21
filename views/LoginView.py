@@ -57,6 +57,8 @@ class LoginView(IViewable):
     def unmount(self):
         # unbind then remove elements
         self.btn_login.unbind_all("<ButtonRelease-1>")
+        self.btn_login.unbind_all("<space>")
+        self.btn_login.unbind_all("<Return>")
         self.btn_reset.unbind_all("<ButtonRelease-1>")
         self.txt_username.unbind_all("<Return>")
         self.txt_password.unbind_all("<Return>")
@@ -68,6 +70,8 @@ class LoginView(IViewable):
 
     def __bind_event_handlers(self):
         self.btn_login.bind("<ButtonRelease-1>", self.__handle_login)
+        self.btn_login.bind("<space>", self.__handle_login)
+        self.btn_login.bind("<Return>", self.__handle_login)
         self.btn_reset.bind("<ButtonRelease-1>", self.__handle_reset)
         self.txt_username.bind("<Return>", self.__handle_login)
         self.txt_password.bind("<Return>", self.__handle_login)
