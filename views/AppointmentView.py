@@ -170,6 +170,7 @@ class AppointmentView(IViewable):
     def __build_doctors_list(self):
         # get list of doctors that his patient is allowed to see
         self.available_doctors = Database.get_doctors_available_to_patient(self.root.current_user_id)
+        print(self.available_doctors)
 
         # populate the combobox with the list of doctors
         self.doctors = []
@@ -242,7 +243,7 @@ class AppointmentView(IViewable):
     def __show_users_appointments(self):
         appointments = Database.get_users_appointments(self.root.current_user_id, round(datetime.now().timestamp()))
         current_row = 3
-        self.available_doctors = {}
+        self.user_schedules = {}
 
         # display appointments on screen
         for appointment in appointments:
