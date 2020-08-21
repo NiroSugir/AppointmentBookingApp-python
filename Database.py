@@ -16,7 +16,7 @@ class Database:
         Database.db = db
 
         try:
-            Database.conn = sqlite3.connect(Database.db)
+            Database.conn = sqlite3.connect(Database.db, isolation_level=None)
         except Error as e:
             print("Failed to connect to db", e, sep="\n")
             exit()
@@ -51,7 +51,7 @@ class Database:
             return True
 
         except IntegrityError as e:
-            Database.__show_db_error("Username is already taken, please choose another!")
+            Database.__show_db_error(e)
             return False
         except Error as e:
             print("Failed to load users from db!", e, sep="\n")

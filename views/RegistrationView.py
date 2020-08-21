@@ -113,6 +113,7 @@ class RegistrationView(IViewable):
 
         self.registration_frame.destroy()
 
+    @staticmethod
     def __show_validation_error_message(msg):
         messagebox.showerror(title="Sign Up Error", message=msg)
 
@@ -152,8 +153,8 @@ class RegistrationView(IViewable):
         elif len(username) < 4 or len(username) > 25:
             RegistrationView.__show_validation_error_message("Username must be between 3 & 25 characters long")
             valid = False
-        elif len(password) < 8 or len(password) > 25:
-            RegistrationView.__show_validation_error_message("Password must be between 8 & 25 characters long")
+        elif len(password) < 4 or len(password) > 25:
+            RegistrationView.__show_validation_error_message("Password must be between 4 & 25 characters long")
             valid = False
         elif password != password2:
             RegistrationView.__show_validation_error_message("Passwords do not match")
@@ -171,8 +172,8 @@ class RegistrationView(IViewable):
                 password
         ):
             # route to login screen when all goes well
-            self.root.switch_to_login()
-
+            # self.root.switch_to_login()
+            pass
     def __handle_reset(self, _):
         self.txt_first_name.delete(0, tk.END)
         self.txt_last_name.delete(0, tk.END)

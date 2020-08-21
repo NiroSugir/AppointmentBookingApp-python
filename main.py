@@ -2,7 +2,7 @@
 from App import App
 from Database import Database
 
-Database.connect("database.sqlite3")
+Database.connect("db.sqlite3")
 
 # start with app with the login screen
 app = App()
