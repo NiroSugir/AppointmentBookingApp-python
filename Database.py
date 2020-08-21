@@ -56,6 +56,8 @@ class Database:
                 # username already taken
                 Database.__show_db_error("Username is already taken. Please choose another.")
             else:
+                # maybe db locked up. for purpose of the project, show the error message so it
+                # can be debugged and fixed
                 Database.__show_db_error(e)
 
             return False
