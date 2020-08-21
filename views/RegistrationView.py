@@ -108,8 +108,11 @@ class RegistrationView(IViewable):
     def unmount(self):
         # unbind then remove elements
         self.btn_signup.unbind_all("<ButtonRelease-1>")
+        self.btn_signup.unbind_all("<Return>")
+        self.btn_signup.unbind_all("<space>")
         self.btn_reset.unbind_all("<ButtonRelease-1>")
         self.root.unbind_all("<Return>")
+        self.txt_password2.unbind_all("<Return>")
 
         self.registration_frame.destroy()
 
@@ -119,8 +122,11 @@ class RegistrationView(IViewable):
 
     def __bind_event_handlers(self):
         self.btn_signup.bind("<ButtonRelease-1>", self.__handle_login)
+        self.btn_signup.bind("<Return>", self.__handle_login)
+        self.btn_signup.bind("<space>", self.__handle_login)
         self.btn_reset.bind("<ButtonRelease-1>", self.__handle_reset)
         self.root.bind("<Return>", self.__handle_login)
+        self.txt_password2.bind("<Return>", self.__handle_login)
 
     def __handle_login(self, _):
         first_name = self.txt_first_name.get().strip()
