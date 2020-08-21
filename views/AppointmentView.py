@@ -6,7 +6,7 @@ from views.IViewable import IViewable
 from Style import Style
 from Database import Database
 from datetime import datetime, date
-from time import mktime
+from time import mktime, strftime, localtime
 
 
 class AppointmentView(IViewable):
@@ -21,6 +21,7 @@ class AppointmentView(IViewable):
 
         # mount elements to screen
 
+        # panel just for username to take up the top
         self.p_username = tk.Frame(master=self.root, relief=tk.RAISED, borderwidth=1)
         self.p_username.grid(row=1, column=1, sticky="we", columnspan=2)
 
@@ -104,6 +105,16 @@ class AppointmentView(IViewable):
         self.btn_search_apmt.grid(row=6, column=1, sticky="we", columnspan=2, pady=10, padx=5)
 
         # self.cbo_month.state(statespec=)
+
+        # user's appointments list
+        self.p_user_apts = tk.Frame(master=self.root, relief=tk.RAISED, borderwidth=1)
+        self.p_user_apts.grid(row=3, column=1, sticky="nw")
+
+        self.lbl_schedule_title = tk.Label(master=self.p_user_apts, text=self.user_data['username'] + "'s Appointments", font=Style.font_title)
+        self.lbl_schedule_title.grid(row=1, column=1, sticky="we", columnspan=3)
+
+        self.user_schedules = {}
+
 
         # start booking search from today's date
         today = date.today()
@@ -226,9 +237,20 @@ class AppointmentView(IViewable):
             # rebuild schedule without the removed timeslot
             self.__build_schedule(self.search_available_bookings())
 
-            # todo: rerender appointments list (not yet implemented)
-
-            pass
+            # rerender appointments list (not yet implemented)
+            self.__show_users_appointments()
 
     def __show_users_appointments(self):
-        Database.get_users_appointments(self.root.current_user_id, round(datetime.now().timestamp()))
+        appointments = Database.get_users_appointments(self.root.current_user_id, round(datetime.now().timestamp()))
+        current_row = 3
+        self.afd = {}
+        # todo: display appointments on screen
+        print('appointments: ', appointments)
+        for appointment in appointments:
+            timestamp = appointment[0]
+            display_time = strftime("%D %H:%M", localtime(timestamp))
+            t = tk.Label(master=self.p_user_apts, text=display_time)
+            t.grid(row=current_row, column=1, sticky="we")
+            self.afd[timestamp] = t
+            current_row += 1
+
