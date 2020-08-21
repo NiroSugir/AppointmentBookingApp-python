@@ -26,7 +26,6 @@ class Database:
         try:
             cur = Database.conn.cursor()
 
-            # TODO: bind parameters if you have time
             query = "SELECT user_id FROM Users where username='"+username+"' AND password='"+password+"';"
             cur.execute(query)
             rows = cur.fetchall()
@@ -43,7 +42,6 @@ class Database:
         try:
             cur = Database.conn.cursor()
 
-            # TODO: bind parameters if you have time
             # TODO: hash password if you have time (don't forget to compare hashed pword in login method)
             query = "INSERT INTO Users (first_name, last_name, age, gender, address, city, username, password) VALUES ('"+first_name+"','"+last_name+"','"+str(age)+"','"+gender+"','"+address+"','"+city+"','"+username+"','"+password+"');"
             cur.execute(query)
@@ -70,7 +68,6 @@ class Database:
         try:
             cur = Database.conn.cursor()
 
-            # TODO: bind parameters if you have time
             query = "SELECT username, first_name, last_name, age, city, gender, address FROM Users WHERE user_id="+str(user_id)+";"
             cur.execute(query)
             rows = cur.fetchall()
@@ -92,3 +89,73 @@ class Database:
         except Error as e:
             print("Failed to load users from db!", e, sep="\n")
             exit()
+
+    @staticmethod
+    def get_doctors_available_to_patient(user_id):
+        try:
+            cur = Database.conn.cursor()
+
+            # get the next appointment for this user. since they can only schedule with one doctor
+            # the first one on the list (if any) will determine which doctor(s) this patient is
+            # allowed to see
+            query = "SELECT doctor_id FROM Appointments where user_id="+str(user_id)+" LIMIT 1;"
+            cur.execute(query)
+            rows = cur.fetchall()
+
+            # by default may see any doctor
+            clause = "" if len(rows) == 0 else " WHERE doctor_id="+str(rows[0][0])
+
+            query = "SELECT doctor_id, name FROM Doctors"+clause+";"
+            cur.execute(query)
+            rows = cur.fetchall()
+
+            doctors = {}
+
+            for row in rows:
+                doctors[row[0]] = {
+                    "id": row[0],
+                    "name": row[1]
+                }
+
+            return doctors
+
+        except Error as e:
+            print("Failed to load doctors from db!", e, sep="\n")
+            exit()
+
+    @staticmethod
+    def get_unavailable_timeslots_for_doctor(doctor_id, start_timestamp, end_timestamp):
+        try:
+            cur = Database.conn.cursor()
+
+            query = "SELECT appointment_time, user_id from Appointments WHERE doctor_id=" + str(doctor_id) + " AND appointment_time BETWEEN " + str(start_timestamp) + " AND " + str(end_timestamp) + ";"
+            cur.execute(query)
+
+            rows = cur.fetchall()
+
+            return rows
+
+        except Error as e:
+            print("Failed to load timeslots from db!", e, sep="\n")
+            exit()
+
+    @staticmethod
+    def book_appointment(doctor_id, user_id, timestamp):
+        try:
+            cur = Database.conn.cursor()
+
+            # using composite primary key (doctor id + appointment time) to restrict dr from being booked
+            # twice @ the same time
+            query = "INSERT INTO Appointments (appointment_time, doctor_id, user_id) VALUES ("+str(timestamp)+","+str(doctor_id)+","+str(user_id)+");"
+            cur.execute(query)
+
+            return True
+
+        except Error as e:
+            if str(e).find("UNIQUE") is not False:
+                Database.__show_db_error("Failed to book appointment, that timeslot is already taken!")
+            else:
+                Database.__show_db_error("Failed to book appointment!")
+                print("Failed to book appointment!", e, sep="\n")
+
+            return False

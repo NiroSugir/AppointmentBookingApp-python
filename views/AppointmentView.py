@@ -1,9 +1,12 @@
 # Niroshan Sugirtharatnam (0410842)
 import tkinter as tk
 from tkinter import messagebox
+from tkinter import ttk
 from views.IViewable import IViewable
 from Style import Style
 from Database import Database
+from datetime import datetime, date
+from time import mktime
 
 
 class AppointmentView(IViewable):
@@ -11,7 +14,7 @@ class AppointmentView(IViewable):
         self.root = root
 
         # set window size
-        self.root.master.minsize(900, 400)
+        self.root.master.minsize(900, 600)
 
         # get user data from db
         self.user_data = Database.get_userdata(self.root.current_user_id)
@@ -19,48 +22,98 @@ class AppointmentView(IViewable):
         # mount elements to screen
 
         self.p_username = tk.Frame(master=self.root, relief=tk.RAISED, borderwidth=1)
-        self.p_username.grid(row=1, column=1, sticky="nw")
+        self.p_username.grid(row=1, column=1, sticky="we", columnspan=2)
 
         # personal info panel
         self.p_info = tk.Frame(master=self.root, relief=tk.RAISED, borderwidth=1)
         self.p_info.grid(row=2, column=1, sticky="nw")
 
         self.lbl_username2 = tk.Label(master=self.p_username, text="Username: " + self.user_data["username"], font=Style.font_title, width=50)
-        self.lbl_username2.grid(row=1, column=1, sticky="w", columnspan=4)
+        self.lbl_username2.grid(row=1, column=1, sticky="we", columnspan=4)
 
         self.lbl_first_name = tk.Label(master=self.p_info, text="First Name:", font=Style.font_key, borderwidth=1)
-        self.lbl_first_name.grid(row=2, column=1, sticky="e", pady=5)
+        self.lbl_first_name.grid(row=2, column=1, sticky="w", pady=5)
         self.lbl_first_name2 = tk.Label(master=self.p_info, text=self.user_data["first_name"], font=Style.font_regular)
-        self.lbl_first_name2.grid(row=2, column=2, sticky="w", pady=5)
+        self.lbl_first_name2.grid(row=2, column=2, sticky="w", pady=5, padx=15)
 
         self.lbl_last_name = tk.Label(master=self.p_info, text="Last Name:", font=Style.font_key)
-        self.lbl_last_name.grid(row=3, column=1, sticky="e", pady=5)
+        self.lbl_last_name.grid(row=3, column=1, sticky="w", pady=5)
         self.lbl_last_name2 = tk.Label(master=self.p_info, text=self.user_data["last_name"], font=Style.font_regular)
-        self.lbl_last_name2.grid(row=3, column=2, sticky="w", pady=5)
+        self.lbl_last_name2.grid(row=3, column=2, sticky="w", pady=5, padx=15)
 
         self.lbl_age = tk.Label(master=self.p_info, text="Age:", font=Style.font_key)
-        self.lbl_age.grid(row=4, column=1, sticky="e", pady=5)
+        self.lbl_age.grid(row=4, column=1, sticky="w", pady=5)
         self.lbl_age2 = tk.Label(master=self.p_info, text=self.user_data["age"], font=Style.font_regular)
-        self.lbl_age2.grid(row=4, column=2, sticky="w", pady=5)
+        self.lbl_age2.grid(row=4, column=2, sticky="w", pady=5, padx=15)
 
         self.lbl_city = tk.Label(master=self.p_info, text="City:", font=Style.font_key)
-        self.lbl_city.grid(row=2, column=3, sticky="e", pady=5)
+        self.lbl_city.grid(row=2, column=3, sticky="w", pady=5, padx=25)
         self.lbl_city2 = tk.Label(master=self.p_info, text=self.user_data["city"], font=Style.font_regular)
         self.lbl_city2.grid(row=2, column=4, sticky="w", pady=5)
 
         self.lbl_address = tk.Label(master=self.p_info, text="Street:", font=Style.font_key)
-        self.lbl_address.grid(row=3, column=3, sticky="e", pady=5)
+        self.lbl_address.grid(row=3, column=3, sticky="w", pady=5, padx=25)
         self.lbl_address2 = tk.Label(master=self.p_info, text=self.user_data["address"], font=Style.font_regular)
         self.lbl_address2.grid(row=3, column=4, sticky="w", pady=5)
 
         self.lbl_gender = tk.Label(master=self.p_info, text="Gender:", font=Style.font_key)
-        self.lbl_gender.grid(row=4, column=3, sticky="e", pady=5)
+        self.lbl_gender.grid(row=4, column=3, sticky="w", pady=5, padx=25)
         self.lbl_gender2 = tk.Label(master=self.p_info, text=self.user_data["gender"], font=Style.font_regular)
         self.lbl_gender2.grid(row=4, column=4, sticky="w", pady=5)
 
-        # availabilities panel
-        self.p_avail = tk.Frame(master=self.root, relief=tk.RAISED, borderwidth=1)
-        self.p_avail.grid(row=2, column=1, padx=15, pady=35, sticky="sw")
+        self.padding = tk.Label(master=self.p_info)
+        self.padding.grid(row=4, column=5, padx=15)
+
+        # appointments panel
+        self.p_apmt = tk.Frame(master=self.root, relief=tk.RAISED, borderwidth=1)
+        self.p_apmt.grid(row=2, column=2, sticky="nswe", rowspan=2)
+
+        self.lbl_apt_title = tk.Label(master=self.p_apmt, text="Book an Appointment", font=Style.font_title)
+        self.lbl_apt_title.grid(row=1, column=1, sticky="w", columnspan=2, pady=10)
+
+        # populated by values from the db
+        self.available_doctors = {} # use the available doctors as reference. it contains the id associated with the selected dr index
+        self.doctors = []
+        self.doctor_value = tk.StringVar()
+
+        self.lbl_doctor = tk.Label(master=self.p_apmt, text="Doctor:", font=Style.font_key)
+        self.lbl_doctor.grid(row=2, column=1, sticky="w")
+        self.cbo_doctors = ttk.Combobox(master=self.p_apmt, value=self.doctors, font=Style.font_regular, state="readonly", textvariable=self.doctor_value)
+        self.cbo_doctors.grid(row=2, column=2, sticky="we")
+
+        self.lbl_day = tk.Label(master=self.p_apmt, text="Day:", font=Style.font_key)
+        self.lbl_day.grid(row=3, column=1, sticky="w")
+        self.txt_day = tk.Entry(master=self.p_apmt, font=Style.font_regular)
+        self.txt_day.grid(row=3, column=2, sticky="we")
+
+        self.lbl_month = tk.Label(master=self.p_apmt, text="Month:", font=Style.font_key)
+        self.lbl_month.grid(row=4, column=1, sticky="w")
+
+        self.months = ('January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December')
+        self.month_value = tk.StringVar()
+
+        self.cbo_month = ttk.Combobox(master=self.p_apmt, value=self.months, font=Style.font_regular, state="readonly", textvariable=self.month_value)
+        self.cbo_month.grid(row=4, column=2, sticky="we")
+
+        self.lbl_year = tk.Label(master=self.p_apmt, text="Year:", font=Style.font_key)
+        self.lbl_year.grid(row=5, column=1, sticky="w")
+        self.txt_year = tk.Entry(master=self.p_apmt, font=Style.font_regular)
+        self.txt_year.grid(row=5, column=2, sticky="we")
+
+        self.btn_search_apmt = tk.Button(master=self.p_apmt, font=Style.font_regular, text="Search")
+        self.btn_search_apmt.grid(row=6, column=1, sticky="we", columnspan=2, pady=10, padx=5)
+
+        # self.cbo_month.state(statespec=)
+
+        # start booking search from today's date
+        today = date.today()
+        self.txt_day.insert(0, today.strftime("%d"))
+        self.month_value.set(today.strftime("%B"))
+        self.txt_year.insert(0, today.strftime("%Y"))
+
+        now = datetime.now()
+        timestamp = datetime.timestamp(now)
+        print(timestamp)
 
 
         # setup all button functionalities
@@ -69,22 +122,95 @@ class AppointmentView(IViewable):
         # at the end, focus on the main user input
         # self.txt_username.focus()
 
+        # build schedule only search button is pressed. showing now only to aid in building ui
+        # self.__build_schedule()
+
+        self.__build_doctors_list()
+
+
     def unmount(self):
         # unbind then remove elements
-        # self.btn_login.unbind_all("<ButtonRelease-1>")
-        # self.btn_reset.unbind_all("<ButtonRelease-1>")
-        # self.txt_username.unbind_all("<Return>")
-        # self.txt_password.unbind_all("<Return>")
-        # self.root.unbind_all("<Return>")
+        self.btn_search_apmt.unbind_all("<ButtonRelease-1>")
 
         self.p_username.destroy()
         self.p_info.destroy()
-        self.p_avail.destroy()
+        self.p_apmt.destroy()
 
     def __bind_event_handlers(self):
-        # self.btn_login.bind("<ButtonRelease-1>", self.__handle_login)
-        # self.btn_reset.bind("<ButtonRelease-1>", self.__handle_reset)
-        # self.txt_username.bind("<Return>", self.__handle_login)
-        # self.txt_password.bind("<Return>", self.__handle_login)
-        # self.root.bind("<Return>", self.__handle_login)
-        pass
+        self.btn_search_apmt.bind("<ButtonRelease-1>", self.__handle_search_available_bookings)
+
+    def __handle_search_available_bookings(self, _):
+        self.search_available_bookings()
+
+    def search_available_bookings(self):
+        time_string = self.month_value.get() + " " + self.txt_day.get().zfill(2) + " " + self.txt_year.get()
+        time_format = "%B %d %Y"
+        try:
+            a = datetime.strptime(time_string, time_format)
+        except ValueError:
+            messagebox.showerror(title="Invalid Date", message="The date looks invalid")
+            return
+
+        starting_timestring = time_string + " 10:00:00 +0400"
+        ending_timestring = time_string + " 15:00:00 +0400"
+        start_timestamp = mktime(datetime.strptime(starting_timestring, format + " %H:%M:%S %z").timetuple())
+        ending_timestamp = mktime(datetime.strptime(ending_timestring, format + " %H:%M:%S %z").timetuple())
+        doctor_id = self.available_doctors[list(self.available_doctors.keys())[self.cbo_doctors.current()]]['id']
+        unavailable_slots = Database.get_unavailable_timeslots_for_doctor(doctor_id, start_timestamp=start_timestamp,
+                                                                          end_timestamp=ending_timestamp)
+        print(unavailable_slots)
+        self.__build_schedule()
+
+    def __build_doctors_list(self):
+        # get list of doctors that his patient is allowed to see
+        self.available_doctors = Database.get_doctors_available_to_patient(self.root.current_user_id)
+        print(self.available_doctors)
+
+        # populate the combobox with the list of doctors
+        self.doctors = []
+        for d in list(self.available_doctors.values()):
+            self.doctors.append(d['name'])
+
+        self.cbo_doctors['values'] = self.doctors
+        self.doctor_value.set(self.doctors[0])
+
+    def __build_schedule(self):
+        starting_row = 7
+        self.schedules = {}
+
+        hours = range(10, 15)
+        minutes = range(0, 60, 15)
+
+        current_row = starting_row
+        for hour in hours:
+            for minute in minutes:
+                this_time = str(hour)+":"+str(minute).zfill(2)
+                self.schedules[this_time] = {}
+                self.schedules[this_time]['lbl'] = tk.Label(master=self.p_apmt, text=this_time, font=Style.font_regular)
+                self.schedules[this_time]['lbl'].grid(row=current_row, column=1)
+
+                # show button only if time is available
+                self.schedules[this_time]['btn'] = tk.Button(master=self.p_apmt, text="Schedule for: "+this_time, font=Style.font_regular, command=lambda t=this_time: self.__schedule_appointment(t))
+                self.schedules[this_time]['btn'].grid(row=current_row, column=2, sticky="we")
+
+                current_row += 1
+
+    def __schedule_appointment(self, schedule_time):
+        # create timestamp from time
+        datetime_string = self.month_value.get() + " " + self.txt_day.get().zfill(2) + " " + self.txt_year.get() + " " + schedule_time + ":00 +0400"
+        timestamp = round(mktime(datetime.strptime(datetime_string, "%B %d %Y %H:%M:%S %z").timetuple()))
+
+        # get doctor id
+        doctor_id = self.available_doctors[list(self.available_doctors.keys())[self.cbo_doctors.current()]]['id']
+        success = Database.book_appointment(doctor_id, self.root.current_user_id, timestamp)
+
+        if success:
+            # rebuild available doctors list
+            self.__build_doctors_list()
+
+            # rebuild schedule without the removed timeslot
+            self.__build_schedule()
+
+            # todo: rerender appointments list (not yet implemented)
+
+            pass
