@@ -111,6 +111,9 @@ class AppointmentView(IViewable):
         self.month_value.set(today.strftime("%B"))
         self.txt_year.insert(0, today.strftime("%Y"))
 
+        # initialize list used for adding dynamically createing buttons and labels for booking
+        self.schedules = {}
+
         # setup all button functionalities
         self.__bind_event_handlers()
 
@@ -166,11 +169,14 @@ class AppointmentView(IViewable):
         self.doctor_value.set(self.doctors[0])
 
     def __build_schedule(self, unavailable_slots):
-        print(unavailable_slots)
-        f = []
+        # remove old elements if there are any
+        for key in list(self.schedules):
+            if self.schedules[key].get('btn', False):
+                self.schedules[key]['btn'].destroy()
+            elif self.schedules[key].get('lbl', False):
+                self.schedules[key]['lbl'].destroy()
 
         unavailable_slots_dict = {}
-
         # create dictionary for constant time lookup O(1)
         for u in unavailable_slots:
             unavailable_slots_dict[u[0]] = True
