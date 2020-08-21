@@ -22,7 +22,7 @@ class RegistrationView(IViewable):
         # navigation panel
         self.nav_frame = tk.Frame(master=self.root, relief=tk.RAISED, borderwidth=0)
         self.nav_frame.grid(row=1, column=1, sticky="ne")
-        self.btn_switch_to_login = tk.Button(master=self.nav_frame,  width=12, text="Switch to Login", font=Style.font_menu_item)
+        self.btn_switch_to_login = tk.Button(master=self.nav_frame,  width=18, text="Switch to Login", font=Style.font_menu_item)
         self.btn_switch_to_login.grid(row=12, column=2, pady=10)
 
         # registration panel

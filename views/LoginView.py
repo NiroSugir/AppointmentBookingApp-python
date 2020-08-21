@@ -17,8 +17,15 @@ class LoginView(IViewable):
         # mount elements to screen
 
         # keep reference to all containers, they must all be unmounted when screen gets switche
+
+        # navigation panel
+        self.nav_frame = tk.Frame(master=self.root, relief=tk.RAISED, borderwidth=0)
+        self.nav_frame.grid(row=1, column=1, sticky="ne")
+        self.btn_switch_to_signup = tk.Button(master=self.nav_frame,  width=18, text="Switch to Sign Up", font=Style.font_menu_item)
+        self.btn_switch_to_signup.grid(row=12, column=2, pady=10)
+
         self.login_frame = tk.Frame(master=self.root, relief=tk.RAISED, borderwidth=0)
-        self.login_frame.grid(row=1, column=1, padx=15, pady=35)
+        self.login_frame.grid(row=2, column=1, padx=15, pady=35)
 
         self.lbl_login_title = tk.Label(master=self.login_frame, text="Login", font=Style.font_title)
         self.lbl_login_title.grid(row=1, column=1, sticky="w", columnspan=3)
@@ -54,7 +61,9 @@ class LoginView(IViewable):
         self.txt_username.unbind_all("<Return>")
         self.txt_password.unbind_all("<Return>")
         self.root.unbind_all("<Return>")
+        self.btn_switch_to_signup.unbind_all("<ButtonRelease-1>")
 
+        self.nav_frame.destroy()
         self.login_frame.destroy()
 
     def __bind_event_handlers(self):
@@ -63,6 +72,10 @@ class LoginView(IViewable):
         self.txt_username.bind("<Return>", self.__handle_login)
         self.txt_password.bind("<Return>", self.__handle_login)
         self.root.bind("<Return>", self.__handle_login)
+        self.btn_switch_to_signup.bind("<ButtonRelease-1>", self.__switch_to_signup_screen)
+
+    def __switch_to_signup_screen(self, _):
+        self.root.switch_to_registration()
 
     def __handle_login(self, _):
         user_id = Database.verify_login_credentials(self.txt_username.get(), self.txt_password.get())
